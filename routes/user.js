@@ -68,12 +68,6 @@ router.post('/signin', passport.authenticate('local.signin', {
         res.redirect('/user/profile');
     }
 });
-
-
-/*router.delete('/delete/:id', function(req, res){
-    Order.findByIdAndRemove(req.params.id);
-    res.redirect('/user/profile');
-  });*/
   
 module.exports = router;
 
