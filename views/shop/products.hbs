@@ -1,0 +1,100 @@
+<style type="text/css">
+    .ft-size{
+        font-size: 25px;
+    }
+    .pd-10{
+        padding: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-5 col-lg-4">
+        <div class="panel panel-default">
+            <form id="form" action="/"  method="POST">
+                <div class="panel-heading text-center">
+                    Products
+                </div>
+                <div class="panel-body">
+                    <input type="hidden" name="_id" id="id">
+                    <div class="row">
+                        <div class="col-xs-12 pd-10">
+                        <input type="text" name="codigo" id="codigo" 
+                        placeholder="Ingresar codigo" class="form-control input-sm">
+                        </div>
+                        <div class="col-xs-12 pd-10">
+                        <input type="text" name="title" id="title"
+                        placeholder="Ingresa el nombre del Producto" class="form-control input-sm">
+                        </div>
+                        <div class="col-xs-12 pd-10">
+                        <input type="text" name="descripcion" id="descripcion"
+                        placeholder="Descripcion del Producto" class="form-control input-sm">
+                        </div>
+                        <div class="col-xs-12 pd-10">
+                            <select class="browser-default form-control input-sm"
+                            name="categoria" id="categoria">
+                            <option value="" selected>Seleccione la categoria</option>
+                            <option value="Helados">Helados</option>
+                            <option value="Cafes">Cafes</option>
+                            <option value="Marquesitas">Marquesitas</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-12 pd-10">
+                            <input type="number" name="precio" id="precio"
+                            placeholder="Precio del Producto"  class="form-control input-sm">
+                        </div>
+                        <div class="col-xs-12 pd-10">
+                            <div class="input-field col s12">
+                                <label for="">Imagen</label>
+                                <input type="file"  name="filename">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                        <div class="input-fiel col s12">
+                            <button class="btn btn-primary">Save</button>
+                            <button class="btn btn-danger">Clean</button>
+                        </div>
+                    </div>
+            </form>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-7 col-lg-8">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped table-condensed">
+            <thead>
+                <th>Codigo</th>
+                <th>Producto</th>
+                <th>descripcion</th>
+                <th>Categoria</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+                <th>Operaciones</th>
+            </thead>
+            <tbody>
+               {{#each products}}
+                <tr>
+                    <td><img width="50px" height="70px" src="{{this.filename}}" alt=""></td>
+                    <td> {{ this.codigo }}</td>
+                    <td> {{ this.title }}</td>
+                    <td> {{ this.descripcion }}</td>
+                    <td> {{ this.categoria }}</td>
+                    <td> {{ this.precio }}</td>
+                    <td class="text-center">
+                    <a (click)="post(producto)">
+                        <i class="fa fa-pencil-square-o ft-size"></i>
+                    </a>
+                    <a (click)="delete(producto._id)">
+                        <i class="fa fa-trash-o ft-size text-danger"></i>
+                        </a>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+</div>
+

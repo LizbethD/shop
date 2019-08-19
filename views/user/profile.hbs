@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h1>User Profile</h1>
+        <hr>
+        <h2>My Orders</h2>
+        {{#each orders}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul class="list-group">
+                    {{#each this.items}}
+                    <li class="list-group-item">
+                        <span class="badge">{{this.precio}}</span>
+                        {{this.item.title}} | {{this.qty}} Units
+                    </li>
+                    {{/each}}
+                     <li class="list-group-item">
+                        <span class="badge">{{this.date}}</span>
+                    </li>
+                    
+                    <a href="/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
+                </ul>
+            </div> 
+            <div class="panel-footer">
+                <strong>Total Precio: ${{this.cart.totalPrecio}}</strong></div>
+        </div>
+        {{/each}}
+    </div>
+</div>
