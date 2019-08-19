@@ -70,10 +70,10 @@ router.post('/signin', passport.authenticate('local.signin', {
 });
 
 
-router.delete('/delete/:id', function(req, res){
+/*router.delete('/delete/:id', function(req, res){
     Order.findByIdAndRemove(req.params.id);
     res.redirect('/user/profile');
-  });
+  });*/
   
 module.exports = router;
 
