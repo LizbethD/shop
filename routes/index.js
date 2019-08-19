@@ -20,11 +20,6 @@ router.get('/', function(req, res) {
   });
 });  
 
-router.get('/imagen/:filename', async (req, res) => {
-  const ruta = path.join(__dirname, '../uploads/productos/', req.params.filename);
-  return res.sendFile(ruta);
-});
-
 //Services
 router.get('/services', function(req, res) {
   var successMsg = req.flash('success')[0];
