@@ -22,6 +22,7 @@ app.set('port', process.env.PORT || 4000);
 mongoose.connect('mongodb://localhost/bella-lola', { useNewUrlParser: true })
   .then(db => console.log('DB is connected'))
   .catch(err => console.error(err));
+  
 require('./config/passport');
 
 // view engine setup
