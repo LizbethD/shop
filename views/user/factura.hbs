@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h1>Factura</h1>
+        <hr>
+        <h2>Gracias por su compra!!!</h2>
+
+    <Form action="/pdf" method="POST" >
+    <div>
+        {{#each orders}}
+        <div class="panel panel-default">
+            <input  type="text" name="date" value="{{this.date}} "  class="form-control" readonly>
+            <div class="panel-body">
+                <ul class="list-group">
+                    {{#each this.items}}
+                        <div class="input-group ">
+                            <span class="input-group-addon"> Producto </span>
+                            <input  type="text" name="producto" value="{{this.item.title}}"  class="form-control" readonly>
+                            <span class="input-group-addon"> Units </span>
+                            <input  type="text" name="cantidad" value="{{this.qty}}"  class="form-control" readonly >
+                            <span class="input-group-addon">  Subtotal: $</span> 
+                            <input  type="text" name="subtotal" value="{{this.precio}}"  class="form-control" readonly>
+                        </div>  
+                    {{/each}}
+                </ul>
+            </div> 
+            <div class="panel-footer">
+                <div  class="input-group">
+                    <span class="input-group-addon">   Total a pagar: $</span> 
+                    <input type="text" name="total" value="{{this.cart.totalPrecio}}"  class="form-control" readonly>
+                </div>
+            </div>    
+        </div>
+        {{/each}}
+        <button class="btn btn-success">Imprimir Factura</button>
+        </div>
+    </Form>   
+    </div>
+</div>

@@ -9,7 +9,7 @@
                 <ul class="list-group">
                     {{#each this.items}}
                     <li class="list-group-item">
-                        <span class="badge">{{this.precio}}</span>
+                        <span class="badge">$ {{this.precio}}</span>
                         {{this.item.title}} | {{this.qty}} Units
                     </li>
                     {{/each}}
@@ -19,8 +19,14 @@
                 </ul>
             </div> 
             <div class="panel-footer">
-                <strong>Total Precio: ${{this.cart.totalPrecio}}</strong></div>
+                <strong>Total Precio: ${{this.cart.totalPrecio}}</strong>
+            </div>
+            <div>
+                <a href="/order/{{this._id}}" class="btn btn-danger" role="button">Eliminar</a>
+            </div>     
         </div>
+
         {{/each}}
+        <a href="/factura" class="btn btn-success float-right" role="button">Ver Factura</a>
     </div>
 </div>

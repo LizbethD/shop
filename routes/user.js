@@ -6,8 +6,10 @@ var passport =require('passport')
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 
+
 var csrfProtection = csrf();
 router.use(csrfProtection);
+
 
 router.get('/profile', isLoggedIn, function(req, res, next){
     Order.find({user: req.user}, function(err, orders){
@@ -68,7 +70,6 @@ router.post('/signin', passport.authenticate('local.signin', {
         res.redirect('/user/profile');
     }
 });
-  
 module.exports = router;
 
 function isLoggedIn(req, res, next){

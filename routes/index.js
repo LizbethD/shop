@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var Cart = require('../models/cart');
 
-
 var Product = require('../models/product');
 var Service = require('../models/service');
 var Order = require('../models/order');
@@ -65,8 +64,6 @@ router.get('/add-cart/:id', function(req, res){
 });
 
 //services
-
-
 router.get('/reduce/:id', function(req, res){
   var productId = req.params.id;
   var serviceId = req.params.id;
@@ -89,10 +86,10 @@ router.get('/remove/:id', function(req, res){
 
 router.get('/shopping-cart', function(req, res){
   if(!req.session.cart){
-    return res.render('shop/shopping-cart', {products: null}, {services: null});
+    return res.render('shop/shopping-cart', {products: null});
   }
   var cart = new Cart(req.session.cart);
-  res.render('shop/shopping-cart', {products: cart.generateArray(), services: cart.generateArray(), totalPrecio: cart.totalPrecio})
+  res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrecio: cart.totalPrecio})
 });
 
 router.get('/checkout', isLoggedIn, function(req, res){
@@ -110,12 +107,7 @@ router.post('/checkout', isLoggedIn, function(req, res) {
   }
 
   var date = new Date();
-
-  //date= "/Date(1224043200000)/";
-  //console.log(new Date(parseInt(fecha.substr(6))));
-
   const cart = new Cart(req.session.cart);
-
   var stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 stripe.charges.create({
@@ -145,6 +137,104 @@ stripe.charges.create({
   });
 });
 
+router.get('/order/:id', function(req, res){
+  Order.findByIdAndDelete(req.params.id, function(error){
+     if(error){
+        res.send('Error al intentar eliminar la orden.');
+     }else{ 
+      res.render('user/profile')
+     }
+  });
+});
+
+router.get('/factura', isLoggedIn, function(req, res, next){
+  Order.find({user: req.user}, function(err, orders){
+      if(err){
+          return res.write('Error!')
+      }
+      var cart;
+      orders.forEach(function(order){
+          cart = new Cart(order.cart);
+          order.items = cart.generateArray();
+      });
+      res.render('user/factura', {orders: orders});
+  }).sort({$natural:-1}).limit(1);
+});
+
+//pdf
+const pdfMake = require('../pdfmake/pdfmake');
+const vfsFonts = require('../pdfmake/vfs_fonts');
+
+pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+router.post('/pdf', (req, res, next)=>{ 
+  var producto = req.body.producto;
+  var cantidad = req.body.cantidad;
+  var subtotal = req.body.subtotal;
+  var total = req.body.total;
+
+  var rows = [];
+    rows.push(['Producto', 'Cantidad', 'Subtotal', 'Total']);
+
+    for(var i of [1]) {
+       rows.push([producto, cantidad, subtotal, total]);
+  }
+
+  const documentDefinition = {
+        content: [
+          {
+            text: 'Factura',
+            style: 'header',
+          }, '\n\n',
+          {
+            text: [
+              {text: 'La Bella Lola Marquesitas, \n', fontSize: 12,italics: true},
+              {text: 'Calle Oaxaca No.8, \n', fontSize: 12, italics: true},
+              {text: 'Dolores Hidalgo, Gto. Mx. ', italics: true, fontSize: 12},
+              '\n\n'
+            ]
+          },
+          { 
+            table: {
+              // headers are automatically repeated if the table spans over multiple pages
+              // you can declare how many rows should be treated as headers
+              headerRows: 1,
+              widths: [250, '*', '*', '*'], 
+              body: rows
+            }      
+        // {table: {headerRows: 1,  body: contentPDF} }
+          }, '\n\n',
+        {
+          text: 'Gracias por su compra!!!',
+          style: 'sub',
+        }, '\n\n',
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          alignment: 'center',
+          bold: true
+        }, 
+        sub: {
+          fontSize: 14,
+          alignment: 'center',
+          bold: true
+        }
+      }       
+    };
+    const pdfDoc = pdfMake.createPdf(documentDefinition);
+    pdfDoc.getBase64((data)=>{
+        res.writeHead(200, 
+        {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition':'attachment;filename="filename.pdf"'
+        });
+        const download = Buffer.from(data.toString('utf-8'), 'base64');
+        res.end(download);
+    });
+});
+  //doc.image('wally.jpg', 50, 150, {width: 300});
+
 module.exports = router;
 
 function isLoggedIn(req, res, next){
@@ -155,4 +245,15 @@ function isLoggedIn(req, res, next){
   res.redirect('/user/signin');
 }
 
+/*`Factura`,
+'Gracias por tu compra!!!',
+`${order}`,
+`${address}`,
+`${total}`
 
+ [
+                  [ 'Producto', 'Cantidad', 'Subtotal' ],
+                  [ `${producto}`,  `${cantidad}`, `${subtotal}`],
+                  [ { text: 'Total a pagar  $', bold: true }, '', `${total}`]
+              ]
+});*/

@@ -1,6 +1,6 @@
-stripe.setPublishableKey('pk_test_TYooMQauvdEDq54NiTphI7jx');
+Stripe.setPublishableKey('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
-var $form = $('#checkout-form');
+var $form = $('#payment-form');
 
 $form.submit(function(event) {
     $('#charge-errors').addClass('hidden');
